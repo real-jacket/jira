@@ -1,6 +1,16 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 
-const List = (props) => {
+export interface Project {
+  id: number;
+  name: string;
+  header: string;
+}
+
+interface ListProps {
+  list: Array<Project>;
+}
+
+const List: FunctionComponent<ListProps> = (props) => {
   const { list } = props;
   return (
     <>

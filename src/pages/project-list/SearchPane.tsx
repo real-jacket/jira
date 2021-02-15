@@ -1,9 +1,22 @@
-import React from "react";
+import React, { ChangeEvent, FunctionComponent } from "react";
 
-const SearchPane = (props) => {
+export interface FormField {
+  [key: string]: string;
+}
+
+interface SearchProps {
+  value: FormField;
+  headerOptions: string[];
+  onChange: (value: FormField) => void;
+}
+
+const SearchPane: FunctionComponent<SearchProps> = (props) => {
   const { value, headerOptions, onChange } = props;
 
-  const change = (e, key) => {
+  const change = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    key: "name" | "header"
+  ) => {
     const { value } = e.target;
     onChange({
       [key]: value,

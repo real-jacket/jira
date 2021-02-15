@@ -1,8 +1,17 @@
 const BASEURL = "http://localhost:3001";
 
+type Method = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
+
+interface FetchConfig {
+  method: Method;
+  headers: HeadersInit;
+  mode: RequestMode;
+  body?: BodyInit;
+}
+
 class Request {
   baseUrl;
-  config;
+  config: FetchConfig;
 
   constructor() {
     this.baseUrl = BASEURL;
@@ -15,10 +24,10 @@ class Request {
     };
   }
 
-  request(path, config) {
+  request(path: string, config: FetchConfig) {
     return fetch(this.baseUrl + path, {
       ...this.config,
-      config,
+      ...config,
     })
       .then((res) => {
         return res.json();
@@ -28,27 +37,32 @@ class Request {
       });
   }
 
-  get(path) {
+  get(path: string) {
     return this.request(path, this.config);
   }
 
-  post(path, data) {
-    return generateMethod.call(this, "post", path, data);
+  post(path: string, data: any) {
+    return generateMethod.call(this, "POST", path, data);
   }
 
-  patch(path, data) {
-    return generateMethod.call(this, "patch", path, data);
+  patch(path: string, data: any) {
+    return generateMethod.call(this, "PATCH", path, data);
   }
 
-  delete(path, data) {
-    return generateMethod.call(this, "delete", path, data);
+  delete(path: string, data: any) {
+    return generateMethod.call(this, "DELETE", path, data);
   }
 }
 
-function generateMethod(method, path, data) {
+function generateMethod(
+  this: Request,
+  method: Method,
+  path: string,
+  data: any
+) {
   return this.request(path, {
     ...this.config,
-    method: method.toUpperCase(),
+    method: method,
     body: JSON.stringify(data),
   });
 }

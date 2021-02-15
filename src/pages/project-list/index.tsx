@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { getProjectsRequest } from "../../services/projectList";
 import { useDebounce } from "../../utils/hooks";
-import List from "./List";
-import SearchPane from "./SearchPane";
+import List, { Project } from "./List";
+import SearchPane, { FormField } from "./SearchPane";
 
 const ProjectList = () => {
-  const [headerOptions, setHeaderOptions] = useState([]);
-  const [list, setList] = useState([]);
+  const [headerOptions, setHeaderOptions] = useState<Array<string>>([]);
+  const [list, setList] = useState<Array<Project>>([]);
 
   useEffect(() => {
-    getProjectsRequest().then((res) => {
+    getProjectsRequest().then((res: Array<Project>) => {
       setList(res);
       const options = [...new Set(res.map((item) => item.header))];
       setHeaderOptions(options);
     });
   }, []);
 
-  const [params, setParams] = useState({
+  const [params, setParams] = useState<FormField>({
     name: "",
     header: "",
   });
 
-  const debounceParams = useDebounce(params, 500);
+  const debounceParams = useDebounce<FormField>(params, 500);
 
   useEffect(() => {
     getProjectsRequest(debounceParams).then((res) => {
@@ -29,7 +29,7 @@ const ProjectList = () => {
     });
   }, [debounceParams]);
 
-  const change = (value) => {
+  const change = (value: FormField) => {
     setParams({
       ...params,
       ...value,
